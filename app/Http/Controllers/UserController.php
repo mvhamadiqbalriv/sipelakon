@@ -156,7 +156,17 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = User::findOrFail($id);
+        if ($delete->delete()) {
+            return response()->json([
+                'status' => 'Success',
+                'data' => $delete,
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'Error'
+            ], 404);
+        }
     }
 
     public function changePassword(Request $request, $id){

@@ -43,9 +43,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $no = 1;
+                        @endphp
                         @foreach ($list as $item)
-                            <tr>
-                                <th scope="row">1</th>
+                            <tr id="item_{{$item->id}}">
+                                <th scope="row">{{$no++}}</th>
                                 <td>
                                     @php
                                         $path = asset('assets/back/images/avatars/default_user.png');
@@ -63,7 +66,7 @@
                                 <td>{{$item->email}}</td>
                                 <td>
                                     <a href="{{route('users.edit', $item->id)}}" class="btn btn-success"><i class="fa fa-edit"></i> </a>
-                                    <a href="javascript:void(0)" data-name="{{$item->name}}" data-uid="{{$item->id}}" onclick="deleteUser(this)" class="btn btn-danger"><i class="fa fa-trash"></i> </a>
+                                    <a href="javascript:void(0)" data-name="{{$item->name}}" data-uid="{{$item->id}}" onclick="deleteUserModal(this)" class="btn btn-danger"><i class="fa fa-trash"></i> </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -73,12 +76,75 @@
         </div>
     </div>
 </div>
+<!-- Modal delete -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalTitle">Hapus user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <form id="confirmDeleteForm">
+            <input type="hidden" name="id_user" id="id_user">
+            <div class="modal-body">
+                apakah anda yakin menghapus <b id="namaUserModal"></b> ?
+            </div>
+            <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Ya, Hapus !</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 @section('js')
     <script>
-        function deleteUser(obj){
+        function deleteUserModal(obj){
+            var id = obj.getAttribute('data-uid');
             var nama = obj.getAttribute('data-name');
-            alert(nama);
+            $('#id_user').val(id);
+            $('#namaUserModal').html(nama);
+            $('#confirmDeleteModal').modal('show');
         }
+
+        const form = document.getElementById('confirmDeleteForm');
+ 
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const uid = form.id_user.value;
+            const _token = "{{ csrf_token() }}";
+
+            try {
+                let response = await fetch("{{url('users')}}/"+uid, {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": _token,
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
+                var datasend = await response.json();
+
+                    $('#confirmDeleteModal').modal('hide');
+
+                    if (datasend.errors !== undefined) {
+                        toastr.error('Silahkan coba lagi.', 'Error !');
+                    }else{
+                        if (datasend.status == 'Error') {
+                            toastr.error('Silahkan coba lagi.', 'Error !');
+                        }else{
+                            toastr.success('Data berhasil dihapus.', 'Success !');
+                            document.getElementById('item_'+uid).remove();
+                        }
+                    }
+
+                return false;
+            } catch (err) {
+                console.log(err);
+            }
+        });
+
     </script>
 @endsection

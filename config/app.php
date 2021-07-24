@@ -175,6 +175,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Adds on
+        Spatie\Permission\PermissionServiceProvider::class,
+
     ],
 
     /*
