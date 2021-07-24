@@ -160,6 +160,35 @@
             var nama = obj.getAttribute('data-name');
             $('#id_edit').val(id);
             $('#name_edit').val(nama);
+
+            try {
+                let response = await fetch("{{ url('roles') }}/" + uid, {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": _token,
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
+                var datasend = await response.json();
+
+                $('#confirmDeleteModal').modal('hide');
+
+                if (datasend.errors !== undefined) {
+                    toastr.error('Silahkan coba lagi.', 'Error !');
+                } else {
+                    if (datasend.status == 'Error') {
+                        toastr.error('Silahkan coba lagi.', 'Error !');
+                    } else {
+                        toastr.success('Data berhasil dihapus.', 'Success !');
+                        document.getElementById('item_' + uid).remove();
+                    }
+                }
+
+                return false;
+            } catch (err) {
+                console.log(err);
+            }
+            
             $('#editModal').modal('show');
         }
 

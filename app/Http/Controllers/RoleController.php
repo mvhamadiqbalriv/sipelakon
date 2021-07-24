@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\Role_has_permission;
 
 class RoleController extends Controller
 {
@@ -54,7 +55,7 @@ class RoleController extends Controller
         }else{
             return response()->json([
                 'status' => 'Error'
-            ], 404);
+            ], 500);
 
         }
     }
@@ -105,7 +106,7 @@ class RoleController extends Controller
         }else{
             return response()->json([
                 'status' => 'Error'
-            ], 404);
+            ], 500);
 
         }
     }
@@ -127,8 +128,25 @@ class RoleController extends Controller
         }else{
             return response()->json([
                 'status' => 'Error'
-            ], 404);
+            ], 500);
 
         }
+    }
+
+    public function roleHasPermission($id){
+
+        $roleHasPermissions = Role_has_permission::join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+                                                ->select('role_has_permissions.*', 'permissions.name')
+                                                ->where('role_has_permissions.role_id', '=', $id)
+                                                ->get();
+
+        if ($roleHasPermissions) {
+            return response()->json($roleHasPermissions, 200);
+        }else{
+            return response()->json([
+                'message' => 'Terjadi kesalahan, silahkan coba lagi !'
+            ], 500);
+        }
+
     }
 }
