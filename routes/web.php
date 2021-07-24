@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +20,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('dashboard', DashboardController::class);
+
+    Route::view('profile', 'profile')->name('profile');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::resource('users', UserController::class);
+    Route::resource('web', WebController::class);
+
+    Route::put('/change_password/{id}', [UserController::class, 'changePassword'])->name('change_password');
+});
+
+require __DIR__.'/auth.php';
