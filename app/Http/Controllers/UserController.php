@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Cooperative;
+use Illuminate\Validation\Rules;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -27,7 +30,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('back.user.create');
+        $data['koperasi'] = Cooperative::all();
+        return view('back.user.create',$data);
     }
 
     /**
@@ -39,41 +43,31 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $validation = ([
-            'name' => 'required|max:255|regex:/^[\pL\s\-]+$/u',
-            'username' => 'required|unique:users|max:20|min:6|alpha_dash',
-            'password' => 'required|min:6',
-            'confirm_password' => 'required|min:6|same:password',
-            'email' => 'required|unique:users',
-            'telepon' => 'required|unique:users|max:13',
-        ]);
-        if (empty($request->file('photo'))) {
-            $validation['photo'] = 'mimes:jpeg,bmp,png,jpg|max:2048';
-        };
+        $validation = [
+            'name' => 'required|string|max:255',
+            'username' => 'required|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ];
+
+        if ($request->jenis_akun == 'koperasi') {
+            $validation['cooperative_id'] = 'required';
+        }
+         
         $request->validate($validation);
 
-        $path = null;
-        if (!empty($request->file('photo'))) {
-            $path = Storage::put('public/user', $request->file('photo'));
-        }
-
-        $new = new User([
-            'name' => $request->post('name'),
-            'username' => $request->post('username'),
-            'email' => $request->post('email'),
-            'password' => bcrypt($request->post('password')),
-            'telepon' => $request->post('telepon'),
-            'jenis_kelamin' => $request->post('jenis_kelamin'),
-            'tempat_lahir' => $request->post('tempat_lahir'),
-            'tanggal_lahir' => $request->post('tanggal_lahir'),
-            'alamat' => $request->post('alamat'),
-            'photo' => $path
+        $new = User::create([
+            'name' => $request->name,
+            'nik' => $request->nik,
+            'username' => $request->username,
+            'cooperative_id' => $request->cooperative_id,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
         if ($new->save()) {
-            return redirect('/users')->with('success', 'Pengguna berhasil ditambahkan!');
-        }else{
-            return redirect('/users')->with('error', 'Pengguna gagal ditambahkan!');
+            Alert::success('Success', 'Pengguna berhasil ditambahkan');
+            return redirect(route('users.index'));
         }
 
     }
@@ -99,6 +93,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $data['detail'] = User::findOrFail($id);
+        $data['koperasi'] = Cooperative::all();
         return view('back.user.edit', $data);
     }
 
@@ -111,40 +106,28 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validation = ([
-            'name' => 'required|max:255|regex:/^[\pL\s\-]+$/u',
-            'username' => 'required|max:20|min:6|alpha_dash|unique:users,username,'.$id,
-            'email' => 'required|unique:users,email,'.$id,
-            'telepon' => 'required|max:13|unique:users,telepon,'.$id,
-        ]);
-        if (empty($request->file('photo'))) {
-            $validation['photo'] = 'mimes:jpeg,bmp,png,jpg|max:2048';
-        };
+        $validation = [
+            'name' => 'required|string|max:255',
+            'username' => 'required|unique:users,username,'.$id,
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+        ];
+
+        if ($request->jenis_akun == 'koperasi') {
+            $validation['cooperative_id'] = 'required';
+        }
+         
         $request->validate($validation);
 
         $update = User::findOrFail($id);
-
-        if (!empty($request->file('photo'))) {
-            if (!empty($update->photo)) {
-                Storage::delete($update->photo);
-            }
-            $path = Storage::put('public/user', $request->file('photo'));
-            $update->photo = $path;
-        }
-
-        $update->name = $request->post('name');
-        $update->username = $request->post('username');
-        $update->email = $request->post('email');
-        $update->telepon = $request->post('telepon');
-        $update->jenis_kelamin = $request->post('jenis_kelamin');
-        $update->tempat_lahir = $request->post('tempat_lahir');
-        $update->tanggal_lahir = $request->post('tanggal_lahir');
-        $update->alamat = $request->post('alamat');
+        $update->name = $request->name;
+        $update->nik = $request->nik;
+        $update->username = $request->username;
+        $update->cooperative_id = $request->cooperative_id;
+        $update->email = $request->email;
 
         if ($update->save()) {
-            return redirect('/users')->with('success', 'Pengguna berhasil diperbaharui!');
-        }else{
-            return redirect('/users')->with('error', 'Pengguna gagal diperbaharui!');
+            Alert::success('Success', 'Pengguna berhasil diperbaharui');
+            return redirect(route('users.index'));
         }
     }
 
@@ -190,5 +173,21 @@ class UserController extends Controller
             return redirect(route('users.edit', $id))->with('error', 'Password gagal diperbaharui!');
         }
 
+    }
+
+    public function userDelete(Request $request)
+    {
+        $delete = User::findOrFail($request->id);
+
+        if ($delete->delete()) {
+            return response()->json([
+                'status' => 'success'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error'
+            ]);
+
+        }
     }
 }

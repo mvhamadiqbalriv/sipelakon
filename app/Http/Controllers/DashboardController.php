@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cooperative;
 use Illuminate\Http\Request;
+use App\Models\Post;
 
 class DashboardController extends Controller
 {
@@ -13,7 +15,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('back.dashboard');
+        $data['koperasi_count'] = Cooperative::count();
+        $data['post_count'] = Post::count();
+        return view('back.dashboard', $data);
     }
 
     /**

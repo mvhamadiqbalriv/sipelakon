@@ -2,7 +2,7 @@
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
-                <img src="{{asset('assets/back/images/asset/logo_inimahsumedang_500x.png')}}" width="150" alt="">
+                <img src="{{asset('assets/back/images/sumedang.png')}}" width="100px;" alt="">
             </a>
         </x-slot>
 
@@ -41,6 +41,10 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
+
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
+                    {{ __('Belum punya akun?') }}
+                </a>
 
                 <x-button class="ml-3">
                     {{ __('Log in') }}

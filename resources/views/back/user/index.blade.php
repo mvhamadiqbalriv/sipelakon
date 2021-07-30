@@ -3,148 +3,120 @@
     Pengguna
 @endsection
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-title">
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb breadcrumb-separator-1">
-                <li class="breadcrumb-item"><a href="{{url('/dashboard')}}">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Pengguna</li>
-              </ol>
-            </nav>
-            <h3>Pengguna</h3>
+<div class="container">
+    <br>
+    <h1 class="tt-title-border">
+        Pengguna
+    </h1>
+    <div class="container row mt-4">
+        @if (Auth::user()->jenis_akun == 'admin')
+        <div class="col">
+            <a href="{{route('users.create')}}" class="btn btn-primary"> Tambah</a>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xl">
-        <div class="card">
-            <div class="card-body">
-                @if ($msg = Session::get('success'))
-                    <div class="alert alert-success">
-                        {{$msg}}
-                    </div>
-                @endif
-                @if ($msg = Session::get('error'))
-                    <div class="alert alert-danger">
-                        {{$msg}}
-                    </div>
-                @endif
-                <h5 class="card-title">Daftar Pengguna</h5>
-                <a href="{{route('users.create')}}" class="btn btn-info mb-1"><i class="fa fa-plus-circle"></i> Tambah</a>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col"></th>
-                            <th scope="col">Nama Lengkap</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $no = 1;
-                        @endphp
-                        @foreach ($list as $item)
-                            <tr id="item_{{$item->id}}">
-                                <th scope="row">{{$no++}}</th>
-                                <td>
-                                    @php
-                                        $path = asset('assets/back/images/avatars/default_user.png');
-                                        if ($item->photo) {
-                                            $path = Storage::url($item->photo);
-                                        }
-                                    @endphp
-                                    <img src="{{$path}}" width="35" height="35" style="object-fit: cover" class="rounded" alt="">
-                                </td>
-                                <td>
-                                    <a href="{{route('users.show', $item->id)}}">
-                                        <b>{{$item->name}}</b>
-                                    </a>
-                                </td>
-                                <td>{{$item->email}}</td>
-                                <td>
-                                    <a href="{{route('users.edit', $item->id)}}" class="btn btn-success"><i class="fa fa-edit"></i> </a>
-                                    <a href="javascript:void(0)" data-name="{{$item->name}}" data-uid="{{$item->id}}" onclick="deleteUserModal(this)" class="btn btn-danger"><i class="fa fa-trash"></i> </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>       
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal delete -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalTitle">Hapus user</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="material-icons">close</i>
-                </button>
-            </div>
-            <form id="confirmDeleteForm">
-            <input type="hidden" name="id_user" id="id_user">
-            <div class="modal-body">
-                apakah anda yakin menghapus <b id="namaUserModal"></b> ?
-            </div>
-            <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Ya, Hapus !</button>
+        @endif
+        {{-- <div class="col" style="text-align: right">
+            <form action="{{route('users.filter-category')}}" method="POST">
+                @csrf
+                <div class="form-group">
+                    
                 </div>
             </form>
+        </div> --}}
+    </div>
+    <div class="tt-topic-list">
+        <div class="tt-followers-list">
+            <div class="tt-list-header">
+                <div class="tt-col-name">User</div>
+                <div class="tt-col-value-large hide-mobile">Email</div>
+                <div class="tt-col-value-large hide-mobile">Jenis Akun</div>
+                <div class="tt-col-value">Aksi</div>
+            </div>
+            @if ($list->isEmpty())
+                Belum ada data
+            @endif
+            @foreach ($list as $item)
+                <div class="tt-item" id="user_{{$item->id}}">
+                    <div class="tt-col-merged">
+                        <div class="tt-col-avatar">
+                            @php
+                                $firstCharacter = strtolower(substr($item->name, 0, 1));
+                            @endphp
+                            <svg class="tt-icon">
+                            <use xlink:href="#icon-ava-{{$firstCharacter}}"></use>
+                            </svg>
+                        </div>
+                        <div class="tt-col-description">
+                            <h6 class="tt-title"><a href="#">{{$item->name}}</a></h6>
+                            <ul>
+                                <li><a href="mailto:{{'@'.$item->username}}">{{'@'.$item->username}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tt-col-value-large hide-mobile">{{$item->email}}</div>
+                    <div class="tt-col-value-large hide-mobile tt-color-select">
+                        @if ($item->jenis_akun == 'koperasi')
+                        <span class="tt-color02 tt-badge">Koperasi</span>
+                        @elseif ($item->jenis_akun == 'dinas')
+                            <span class="tt-color10 tt-badge">Dinas</span>
+                        @else
+                            <span class="tt-color07 tt-badge">Admin</span>
+                        @endif
+                    </div>
+                    <div class="tt-col-value">
+                        @if (Auth::user()->jenis_akun == 'admin')
+                        <a href="{{route('users.edit', $item->id)}}" class=""><span
+                            class="tt-color03 tt-badge" style="margin-bottom: 3px;">Edit</span></a>
+                            @if (Auth::user()->id != $item->id)
+                                <a href="javascript:void(0)" onclick="deleteUser({{$item->id}})"><span
+                                    class="tt-color08 tt-badge">Hapus</span></a>
+                            @endif
+                        @else 
+                                <i>No Aksi</i>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <div class="col-12">
+            <div class="tt-row-btn">
+                <button type="button" class="btn-icon js-topiclist-showmore">
+                    <svg class="tt-icon">
+                      <use xlink:href="#icon-load_lore_icon"></use>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 @endsection
 @section('js')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function deleteUserModal(obj){
-            var id = obj.getAttribute('data-uid');
-            var nama = obj.getAttribute('data-name');
-            $('#id_user').val(id);
-            $('#namaUserModal').html(nama);
-            $('#confirmDeleteModal').modal('show');
-        }
+        function deleteUser(id) {
+            Swal.fire({
+                title: 'apakah kamu yakin menghapus pengguna ini?',
+                icon: 'info',
+                confirmButtonText: `Ya, Hapus !`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('users.user-delete') }}",
+                        method: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "id": id
+                        },
 
-        const form = document.getElementById('confirmDeleteForm');
- 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const uid = form.id_user.value;
-            const _token = "{{ csrf_token() }}";
-
-            try {
-                let response = await fetch("{{url('users')}}/"+uid, {
-                    method: "DELETE",
-                    headers: {
-                        "X-CSRF-TOKEN": _token,
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                });
-                var datasend = await response.json();
-
-                    $('#confirmDeleteModal').modal('hide');
-
-                    if (datasend.errors !== undefined) {
-                        toastr.error('Silahkan coba lagi.', 'Error !');
-                    }else{
-                        if (datasend.status == 'Error') {
-                            toastr.error('Silahkan coba lagi.', 'Error !');
-                        }else{
-                            toastr.success('Data berhasil dihapus.', 'Success !');
-                            document.getElementById('item_'+uid).remove();
+                        success: function(result) {
+                            Swal.fire('pengguna berhasil dihapus', '', 'success')
+                            $('#user_' + id).remove();
                         }
-                    }
+                    });
+                } else {
 
-                return false;
-            } catch (err) {
-                console.log(err);
-            }
-        });
-
+                }
+            });
+        }
     </script>
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cooperative;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -20,7 +21,8 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register');
+        $data['koperasi'] = Cooperative::all();
+        return view('auth.register', $data);
     }
 
     /**
@@ -35,12 +37,17 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|unique:users',
+            'cooperative_id' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'nik' => $request->nik,
+            'username' => $request->username,
+            'cooperative_id' => $request->cooperative_id,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
