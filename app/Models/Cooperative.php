@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cooperative extends Model
 {
-    use HasFactory;
+    use SoftDeletes,HasFactory;
 
     protected $guarded = [
         'id'
     ];
 
     public function kategori(){
-        return $this->belongsTo(Category_cooperative::class, 'category_cooperative_id', 'id');
+        return $this->belongsToMany(Category_cooperative::class, 'cooperative_has_categories');
     }
 
     public function desa(){

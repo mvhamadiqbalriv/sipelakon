@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommentPostsTable extends Migration
+class CreateCooperativeHasCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateCommentPostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('comment_posts', function (Blueprint $table) {
+        Schema::create('cooperative_has_categories', function (Blueprint $table) {
             $table->id();
-            $table->text('konten');
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');;
-            $table->unsignedBigInteger('creator_id');
-            $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('cooperative_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_cooperative_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateCommentPostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comment_posts');
+        Schema::dropIfExists('cooperative_has_categories');
     }
 }

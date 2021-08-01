@@ -152,25 +152,35 @@ class UserController extends Controller
         }
     }
 
-    public function changePassword(Request $request, $id){
+    public function changePassword(Request $request){
 
+        $id = $request->id;
         $user = User::findOrFail($id);
 
         $request->validate([
-            'new_password' => 'required|min:6',
-            'confirm_password' => 'required|min:6|same:new_password'
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|min:6|same:password'
         ]);
 
         if (!Hash::check($request->old_password, $user->password)) {
-            return redirect(route('users.edit', $id))->with('error', 'Password lama anda salah!');
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Password lama anda salah'
+            ]);
         }
 
-        $user->password = Hash::make($request->new_password);
+        $user->password = Hash::make($request->password);
 
         if ($user->save()) {
-            return redirect(route('users.edit', $id))->with('success', 'Password berhasil diperbaharui!');
+            return response()->json([
+                'status' => 'success',
+                'msg' => 'Password berhasil diperbaharui'
+            ]);
         }else{
-            return redirect(route('users.edit', $id))->with('error', 'Password gagal diperbaharui!');
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Password gagal diperbaharui'
+            ]);
         }
 
     }
@@ -189,5 +199,27 @@ class UserController extends Controller
             ]);
 
         }
+    }
+
+    public function userVerifikasi(Request $request)
+    {
+        $verifikasi = User::findOrFail($request->id);
+        $verifikasi->is_verified = '1';
+
+        if ($verifikasi->save()) {
+            return response()->json([
+                'status' => 'success'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error'
+            ]);
+
+        }
+    }
+
+    public function setting(){
+        $data['koperasi'] = Cooperative::all();
+        return view('back.setting', $data);
     }
 }

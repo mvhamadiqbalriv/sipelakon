@@ -7,6 +7,11 @@
         </x-slot>
 
         <!-- Validation Errors -->
+        @if (session('success'))
+            <div class="font-medium text-green-600">
+                {{ session('success') }}
+            </div>
+        @endif
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
         <form method="POST" action="{{ route('register') }}">
@@ -14,23 +19,23 @@
 
             <!-- Name -->
             <div>
-                <x-label for="name" :value="__('Nama Lengkap')" />
+                <label for="name" class="block font-medium text-sm text-gray-700">Nama Lengkap <sup title="Wajib diisi" class="text-red-600">*</sup></label>
 
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                    autofocus />
+                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" 
+                     />
             </div>
 
             <!-- NIK -->
             <div class="mt-4">
-                <x-label for="nik" :value="__('NIK')" />
+                <label for="number" class="block font-medium text-sm text-gray-700">NIK</label>
 
-                <x-input id="number" class="block mt-1 w-full" type="text" name="nik" :value="old('nik')" required
-                    autofocus />
+                <x-input id="number" class="block mt-1 w-full" type="text" name="nik" :value="old('nik')" 
+                     />
             </div>
 
             <!-- Email Address -->
             <div class="mt-4">
-                <x-label for="email" :value="__('Email')" />
+                <label for="email" class="block font-medium text-sm text-gray-700">Email <sup title="Wajib diisi" class="text-red-600">*</sup></label>
 
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
                     required />
@@ -38,7 +43,7 @@
 
             <!-- Username -->
             <div class="mt-4">
-                <x-label for="username" :value="__('Username')" />
+                <label for="username" class="block font-medium text-sm text-gray-700">Username <sup title="Wajib diisi" class="text-red-600">*</sup></label>
 
                 <x-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')"
                     required />
@@ -46,7 +51,7 @@
 
             <!-- Koperasi -->
             <div class="mt-4">
-                <x-label for="koperasi" :value="__('Koperasi')" />
+                <label for="koperasi" class="block font-medium text-sm text-gray-700">Koperasi <sup title="Wajib diisi" class="text-red-600">*</sup></label>
                     <select name="cooperative_id" id="koperasi"
                         class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         placeholder="Regular input">
@@ -61,7 +66,7 @@
 
             <!-- Password -->
             <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
+                <label for="password" class="block font-medium text-sm text-gray-700">Password <sup title="Wajib diisi" class="text-red-600">*</sup></label>
 
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
                     autocomplete="new-password" />
@@ -69,12 +74,12 @@
 
             <!-- Confirm Password -->
             <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Confirm Password')" />
+                <label for="password_confirmation" class="block font-medium text-sm text-gray-700">Konfirmasi Password <sup title="Wajib diisi" class="text-red-600">*</sup></label>
 
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
                     name="password_confirmation" required />
             </div>
-
+            <small class="italic">NB: Inputan dengan tanda (<sup title="Wajib diisi" class="text-red-600">*</sup>) Wajib diisi.</small>
             <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                     {{ __('Sudah punya akun?') }}

@@ -23,6 +23,7 @@ class DinasSeeder extends Seeder
             'username' => 'dinas',
             'email' => 'dinas@sipelakon.sumedangkab.go.id',
             'jenis_akun' => 'dinas',
+            'is_verified' => '1',
             'password' => Hash::make('password'),
         ]);
     }

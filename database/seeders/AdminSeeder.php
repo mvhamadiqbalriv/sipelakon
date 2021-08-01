@@ -23,6 +23,7 @@ class AdminSeeder extends Seeder
             'username' => 'admin',
             'email' => 'admin@sipelakon.sumedangkab.go.id',
             'jenis_akun' => 'admin',
+            'is_verified' => '1',
             'password' => Hash::make('password'),
         ]);
     }

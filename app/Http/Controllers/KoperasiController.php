@@ -7,6 +7,7 @@ use App\Models\Cooperative;
 use App\Models\District;
 use App\Models\Category_cooperative;
 use Illuminate\Support\Str;
+use App\Models\Cooperative_has_category;
 
 class KoperasiController extends Controller
 {
@@ -45,7 +46,7 @@ class KoperasiController extends Controller
             'nik' => 'required|string|unique:cooperatives',
             'village_id' => 'required',
             'district_id' => 'required',
-            'category_cooperative_id' => 'required',
+            'category' => 'required',
             'alamat' => 'required|unique:cooperatives'
         ]);
 
@@ -54,15 +55,16 @@ class KoperasiController extends Controller
             'nik' => $request->nik,
             'village_id' => $request->village_id,
             'district_id' => $request->district_id,
-            'category_cooperative_id' => $request->category_cooperative_id,
             'alamat' => $request->alamat,
             'slug' => Str::slug($request->name),
         ]);
 
+        $new->kategori()->attach($request->category);
+
         if ($new->save()) {
             return redirect()
             ->back()
-            ->with('success', 'Your koperasi has been added!');
+            ->with('success', 'Data koperasi berhasil ditambahkan, hubungi admin / dinas untuk verifikasi data.');
         }
     }
 

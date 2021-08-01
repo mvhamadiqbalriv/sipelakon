@@ -63,7 +63,11 @@
                         @endif
                     </div>
                     <div class="tt-col-value">
-                        @if (Auth::user()->jenis_akun == 'admin')
+                        @if (Auth::user()->jenis_akun == 'admin' || 'dinas')
+                        @if ($item->is_verified == '0')
+                            <a href="javascript:void(0)" id="verifikasi_{{$item->id}}" onclick="verifikasiUser({{$item->id}})"><span
+                                class="tt-color07 tt-badge">Verifikasi</span></a>
+                        @endif
                         <a href="{{route('users.edit', $item->id)}}" class=""><span
                             class="tt-color03 tt-badge" style="margin-bottom: 3px;">Edit</span></a>
                             @if (Auth::user()->id != $item->id)
@@ -92,6 +96,32 @@
 @section('js')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function verifikasiUser(id) {
+            Swal.fire({
+                title: 'apakah kamu yakin memverifikasi data pengguna ini?',
+                icon: 'info',
+                confirmButtonText: `Ya, Verifikasi !`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('users.user-verifikasi') }}",
+                        method: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "id": id
+                        },
+
+                        success: function(result) {
+                            Swal.fire('pengguna berhasil diverifikasi', '', 'success')
+                            $('#verifikasi_' + id).remove();
+                        }
+                    });
+                } else {
+
+                }
+            });
+        }
         function deleteUser(id) {
             Swal.fire({
                 title: 'apakah kamu yakin menghapus pengguna ini?',

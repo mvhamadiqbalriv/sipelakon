@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -26,13 +27,44 @@ class AuthenticatedSessionController extends Controller
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LoginRequest $request)
+    public function store(Request $request)
     {
-        $request->authenticate();
+        // $request->authenticate();
 
-        $request->session()->regenerate();
+        // $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // return redirect()->intended(RouteServiceProvider::HOME);
+        // Inputan yg diambil
+        $login = $request->username;
+        $validation = ['password' => 'required|string'];
+        $credentials = $request->only('password');
+
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            $credentials['email'] = $request->username;
+            $validation['username'] = 'required|string|email';
+        }else{
+            $credentials['username'] = $request->username;
+            $validation['username'] = 'required|string';
+        }
+
+        $request->validate($validation);
+        
+        $credentials['is_verified'] = '1';
+
+        if (Auth::attempt($credentials)) {
+            // Jika berhasil login
+
+            return redirect('dashboard');
+
+            //return redirect()->intended('/details');
+        }else{
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+        // Jika Gagal
+        return redirect('login');
+
     }
 
     /**

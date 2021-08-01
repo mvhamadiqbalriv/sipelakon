@@ -36,20 +36,22 @@
                 @enderror
                 </div>
                 <div class="form-group">
-                    <label for="jenis_usaha">Kategori</label>
-                    <select name="category_cooperative_id" id="jenis_usaha" class="form-control">
-                        <option value="">-- Pilih Jenis Usaha --</option>
-                        @foreach ($jenis_usaha as $item)
-                            @php
-                                $selected = null;
-                                if(old('category_cooperative_id') != null){
-                                    $selected = old('category_cooperative_id');
-                                }
-                            @endphp
-                            <option value="{{ $item->id }}" {{($selected == $item->id) ? 'selected' : null}}>{{ $item->nama }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_cooperative_id')
+                    <label for="jenis_usaha">Jenis Kategori</label>
+                    <br>
+                    @php
+                        $oldCat = array();
+                        if(old('category') != null){
+                            $oldCat = old('category');
+                        }
+                    @endphp
+                    @foreach ($jenis_usaha as $item)
+                        <label for="jenis_usaha_{{$item->id}}" class="inline-flex items-center">
+                            <input type="checkbox" value="{{$item->id}}" {{(in_array($item->id,$oldCat)) ? 'checked' : null}} name="category[]" id="jenis_usaha_{{$item->id}}" class="form-checkbox h-5 w-5 text-gray-600"><span
+                                class="ml-2 text-white-300">{{$item->nama}}</span>
+                        </label>
+                        <br>
+                    @endforeach
+                    @error('category')
                         <div class="tt-note" style="color:red">
                             {{$message}}
                         </div>

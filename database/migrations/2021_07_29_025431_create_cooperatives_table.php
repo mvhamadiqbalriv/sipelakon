@@ -23,7 +23,7 @@ class CreateCooperativesTable extends Migration
             $table->char('district_id');
             $table->foreign('district_id')->references('id')->on('districts');
             $table->string('alamat');
-            $table->foreignId('category_cooperative_id')->constrained();
+            $table->foreignId('category_cooperative_id')->nullable()->constrained();
             $table->timestamps();
         });
     }

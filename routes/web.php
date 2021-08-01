@@ -39,35 +39,42 @@ Route::group(['middleware' => 'auth'], function () {
     Route::view('profile', 'profile')->name('profile');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::resource('users', UserController::class);
     Route::resource('web', WebController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('roles', RoleController::class);
-
+    
     Route::resource('post', PostController::class);
-    Route::resource('cooperative', CooperativeController::class);
-
+    
     Route::get('single-post', [PostController::class, 'single'])->name('post.single');
     Route::resource('chat', ChatController::class);
-
-    Route::put('/change_password/{id}', [UserController::class, 'changePassword'])->name('change_password');
-
+    
     Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
     });
-   
+    
     Route::post('post', [PostController::class, 'index'])->name('post.filter-category');
     Route::post('post-store', [PostController::class, 'store'])->name('post.post-store');
     Route::post('post-comment-store', [PostController::class, 'commentStore'])->name('post.comment-store');
     Route::post('post-comment-delete', [PostController::class, 'commentDelete'])->name('post.comment-delete');
     Route::post('post-delete', [PostController::class, 'postDelete'])->name('post.post-delete');
     
-    Route::post('cooperative', [CooperativeController::class, 'index'])->name('cooperative.filter-kecamatan');
-    Route::post('cooperative-store', [CooperativeController::class, 'store'])->name('cooperative.cooperative-store');
-    Route::post('cooperative-delete', [CooperativeController::class, 'cooperativeDelete'])->name('cooperative.cooperative-delete');
-
-    Route::post('users-delete', [UserController::class, 'userDelete'])->name('users.user-delete');
-
+    Route::middleware(['admin'])->group(function () {
+        //Pengguna
+        Route::resource('users', UserController::class);
+        Route::post('users-delete', [UserController::class, 'userDelete'])->name('users.user-delete');
+        Route::post('users-verifikasi', [UserController::class, 'userVerifikasi'])->name('users.user-verifikasi');
+        
+        //Koperasi
+        Route::resource('cooperative', CooperativeController::class);
+        Route::post('cooperative', [CooperativeController::class, 'index'])->name('cooperative.filter-kecamatan');
+        Route::post('cooperative-store', [CooperativeController::class, 'store'])->name('cooperative.cooperative-store');
+        Route::post('cooperative-delete', [CooperativeController::class, 'cooperativeDelete'])->name('cooperative.cooperative-delete');
+        Route::post('cooperative-verifikasi', [CooperativeController::class, 'cooperativeVerifikasi'])->name('cooperative.cooperative-verifikasi');
+    });
+    
+    Route::post('change-password', [UserController::class, 'changePassword'])->name('users.change-password');
+    Route::get('setting', [UserController::class, 'setting'])->name('users.setting');
+    
 
 });
 

@@ -1,21 +1,21 @@
 @extends('layouts.back')
 @section('title')
-    Update User
+    Setting
 @endsection
 @section('content')
 <br>
 <div class="container">
     <div class="tt-wrapper-inner">
         <h1 class="tt-title-border">
-            Update User
+            Setting
         </h1>
-        <form class="form-default form-create-topic" method="POST" action="{{route('users.update', $detail->id)}}">
+        <form class="form-default form-create-topic" method="POST" action="{{route('users.update', Auth::user()->id)}}">
             @csrf
             @method('PUT')
             <div class="form-group">
                 <label for="name">Nama</label>
                 <div class="tt-value-wrapper">
-                    <input type="text" name="name" value="{{$detail->name ?? old('name')}}" class="form-control" id="name" placeholder="Nama Lengkap">
+                    <input type="text" name="name" value="{{Auth::user()->name ?? old('name')}}" class="form-control" id="name" placeholder="Nama Lengkap">
                 </div>
                 @error('name')
                     <div class="tt-note" style="color:red">
@@ -26,7 +26,7 @@
             <div class="form-group">
                 <label for="name">NIK</label>
                 <div class="tt-value-wrapper">
-                    <input type="text" name="nik" value="{{$detail->nik ?? old('nik')}}" class="form-control" id="nik" placeholder="Nomor Induk Kepegawaian">
+                    <input type="text" name="nik" value="{{Auth::user()->nik ?? old('nik')}}" class="form-control" id="nik" placeholder="Nomor Induk Kepegawaian">
                 </div>
                 @error('nik')
                     <div class="tt-note" style="color:red">
@@ -39,7 +39,7 @@
                         <div class="form-group">
                             <label for="email">Email</label>
                             <div class="tt-value-wrapper">
-                                <input type="email" name="email" value="{{$detail->email ?? old('email')}}" class="form-control" id="email" placeholder="Alamat Email">
+                                <input type="email" name="email" value="{{Auth::user()->email ?? old('email')}}" class="form-control" id="email" placeholder="Alamat Email">
                             </div>
                             @error('email')
                                 <div class="tt-note" style="color:red">
@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <label for="username">Username</label>
                             <div class="tt-value-wrapper">
-                                <input type="text" name="username" value="{{$detail->username ?? old('username')}}" class="form-control" id="username" placeholder="Username">
+                                <input type="text" name="username" value="{{Auth::user()->username ?? old('username')}}" class="form-control" id="username" placeholder="Username">
                             </div>
                             @error('username')
                                 <div class="tt-note" style="color:red">
@@ -68,9 +68,9 @@
                             <label >Jenis Akun</label>
                             <select name="jenis_akun" onchange="showCop(this.value)" class="form-control">
                                 <option value="">-- Select --</option>
-                                <option value="admin" {{($detail->jenis_akun == 'admin') ? 'selected' : null}}>Admin</option>
-                                <option value="dinas" {{($detail->jenis_akun == 'dinas') ? 'selected' : null}}>Dinas</option>
-                                <option value="koperasi" {{($detail->jenis_akun == 'koperasi') ? 'selected' : null}}>Koperasi</option>
+                                <option value="admin" {{(Auth::user()->jenis_akun == 'admin') ? 'selected' : null}}>Admin</option>
+                                <option value="dinas" {{(Auth::user()->jenis_akun == 'dinas') ? 'selected' : null}}>Dinas</option>
+                                <option value="koperasi" {{(Auth::user()->jenis_akun == 'koperasi') ? 'selected' : null}}>Koperasi</option>
                             </select>
                         </div>
                         @error('jenis_akun')
@@ -81,7 +81,7 @@
                     </div>
                     @php
                         $styleCop = 'none';
-                        if($detail->jenis_akun == 'koperasi'){
+                        if(Auth::user()->jenis_akun == 'koperasi'){
                             $styleCop = 'block';
                         }
                     @endphp
@@ -90,7 +90,7 @@
                             <label >Koperasi</label>
                             <select name="cooperative_id" onchange="showCate" class="form-control">
                                 @foreach ($koperasi as $item)
-                                    <option value="{{$item->id}}" {{($detail->cooperative_id == $item->id) ? 'selected' : null}}>{{$item->name}}</option>
+                                    <option value="{{$item->id}}" {{(Auth::user()->cooperative_id == $item->id) ? 'selected' : null}}>{{$item->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                  <div class="row">
-                     <div class="col">
+                    <div class="col">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ubahPasswordModal">
                             Ubah Password
                           </button>
@@ -184,13 +184,12 @@
             document.getElementById('koperasi').style.display = 'none';
         }
     }
-
     const ubahPasswordForm = document.getElementById('ubahPasswordForm');
 
     ubahPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const id = "{{$detail->id}}";
+        const id = "{{Auth::user()->id}}";
         const old_password = ubahPasswordForm.old_password.value;
         const password = ubahPasswordForm.password.value;
         const password_confirmation = ubahPasswordForm.password_confirmation.value;

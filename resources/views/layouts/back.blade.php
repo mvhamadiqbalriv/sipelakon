@@ -62,8 +62,10 @@
                                 <li @if($url[3] != 'dashboard') class="active" @endif>
                                     <a href="javascript:void(0)"><span>Menu</span></a>
                                     <ul>
-                                        <li><a href="{{route('users.index')}}">Pengguna</a></li>
-                                        <li><a href="{{route('cooperative.index')}}">Koperasi</a></li>
+                                        @if (Auth::user()->jenis_akun != 'koperasi')
+                                            <li><a href="{{route('users.index')}}">Pengguna</a></li>
+                                            <li><a href="{{route('cooperative.index')}}">Koperasi</a></li>
+                                        @endif
                                         <li><a href="{{route('post.index')}}">Forum</a></li>
                                     </ul>
                                 </li>

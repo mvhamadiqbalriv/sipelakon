@@ -54,15 +54,21 @@
                 </div>
                 <div class="tt-col-value-large hide-mobile">Ds/Kel. {{$item->desa->name}}, Kec. {{$item->kecamatan->name}}, {{$item->alamat}} .</div>
                 <div class="tt-col-value-large hide-mobile">
-                    @if ($item->category_cooperative_id == 1)
-                        <div style="background-color: #355c7d;color:white;border-radius:10px;">{{$item->kategori->nama}}</div>
-                    @elseif ($item->category_cooperative_id == 2)
-                        <div style="background-color: #6c5b7b;color:white;border-radius:10px;">{{$item->kategori->nama}}</div>
-                    @else
-                        <div style="background-color: #c06c84;color:white;border-radius:10px;">{{$item->kategori->nama}}</div>
-                    @endif
+                    @php
+                        $coma = null;
+                        if ($item->kategori->count() > 0) {
+                            $coma = ',';
+                        }
+                    @endphp
+                    @foreach ($item->kategori as $key => $i)
+                        {{$i->nama}} {{ $loop->last ? '.' : '' }}
+                    @endforeach
                 </div>
                 <div class="tt-col-value">
+                    @if ($item->is_verified == 0)
+                        <a href="javascript:void(0)" id="verifikasi_{{$item->id}}" onclick="verifikasiCooperative({{$item->id}})" class=""><span
+                            class="tt-color07 tt-badge">Verifikasi</span></a>
+                    @endif
                     <a href="{{route('cooperative.edit', $item->id)}}" class="" style="margin-bottom: 3px;"><span
                         class="tt-color03 tt-badge">Edit</span></a>
                     <a href="javascript:void(0)" onclick="deleteCooperative({{$item->id}})" class=""><span
@@ -85,6 +91,30 @@
 @section('js')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function verifikasiCooperative(id) {
+            Swal.fire({
+                title: 'apakah kamu yakin memverifikasi data koperasi ini?',
+                icon: 'info',
+                confirmButtonText: `Ya, Verifikasi !`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('cooperative.cooperative-verifikasi') }}",
+                        method: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "id": id
+                        },
+                        success: function(result) {
+                            Swal.fire('koperasi berhasil diverifikasi', '', 'success')
+                            $('#verifikasi_' + id).remove();
+                        }
+                    });
+                } else {
+
+                }
+            });
+        }
         function deleteCooperative(id) {
             Swal.fire({
                 title: 'apakah kamu yakin menghapus koperasi ini?',
@@ -100,9 +130,13 @@
                             "id": id
                         },
                         success: function(result) {
-                            Swal.fire('koperasi berhasil dihapus', '', 'success')
+                            Swal.fire('koperasi berhasil dihapus', '', 'success');
                             $('#cooperative_' + id).remove();
-                        }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                            Swal.fire('koperasi gagal dihapus', '', 'error');
+                            Swal.fire('hapus pengguna terkait terlebih dahulu', '', 'warning');
+                        } 
                     });
                 } else {
 

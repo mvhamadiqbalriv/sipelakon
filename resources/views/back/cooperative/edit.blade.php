@@ -37,20 +37,22 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="jenis_usaha">Kategori</label>
-                    <select name="category_cooperative_id" id="jenis_usaha" class="form-control">
-                        <option value="">-- Pilih Jenis Usaha --</option>
-                        @foreach ($jenis_usaha as $item)
-                            <option value="{{ $item->id }}" {{($detail->category_cooperative_id == $item->id) ? 'selected' : null}}>{{ $item->nama }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_cooperative_id')
+                    <label for="jenis_usaha">Jenis Usaha</label>
+                    <br>
+                    @foreach ($jenis_usaha as $item)
+                        <label for="jenis_usaha_{{$item->id}}" class="inline-flex items-center">
+                            <input type="checkbox" value="{{$item->id}}" {{($detail->kategori->contains($item->id)) ? 'checked' : null}} name="category[]" id="jenis_usaha_{{$item->id}}" class="form-checkbox h-5 w-5 text-gray-600"><span
+                                class="ml-2 text-white-300">{{$item->nama}}</span>
+                        </label>
+                        <br>
+                    @endforeach
+                    @error('category')
                         <div class="tt-note" style="color:red">
                             {{$message}}
                         </div>
                     @enderror
                 </div>
-                <div class="pt-editor">
+                <div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

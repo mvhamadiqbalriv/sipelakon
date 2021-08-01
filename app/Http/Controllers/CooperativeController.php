@@ -49,7 +49,7 @@ class CooperativeController extends Controller
             'nik' => 'required|string|unique:cooperatives',
             'village_id' => 'required',
             'district_id' => 'required',
-            'category_cooperative_id' => 'required',
+            'category' => 'required',
             'alamat' => 'required'
         ]);
 
@@ -58,10 +58,11 @@ class CooperativeController extends Controller
             'nik' => $request->nik,
             'village_id' => $request->village_id,
             'district_id' => $request->district_id,
-            'category_cooperative_id' => $request->category_cooperative_id,
             'alamat' => $request->alamat,
             'slug' => Str::slug($request->name),
         ]);
+
+        $new->kategori()->attach($request->category);
 
         if ($new->save()) {
             Alert::success('Success', 'Koperasi berhasil ditambahkan');
@@ -109,7 +110,7 @@ class CooperativeController extends Controller
             'nik' => 'required|string|unique:cooperatives,nik,'.$id,
             'village_id' => 'required',
             'district_id' => 'required',
-            'category_cooperative_id' => 'required',
+            'category' => 'required',
             'alamat' => 'required'
         ]);
 
@@ -118,10 +119,10 @@ class CooperativeController extends Controller
         $update->nik = $request->nik;
         $update->village_id = $request->village_id;
         $update->district_id = $request->district_id;
-        $update->category_cooperative_id = $request->category_cooperative_id;
         $update->alamat = $request->alamat;
         $update->slug = Str::slug($request->name);
-        
+
+        $update->kategori()->sync($request->category);
 
         if ($update->save()) {
             Alert::success('Success', 'Koperasi berhasil diperbaharui');
@@ -143,8 +144,26 @@ class CooperativeController extends Controller
     public function cooperativeDelete(Request $request)
     {
         $delete = Cooperative::findOrFail($request->id);
+        $delete->kategori()->detach($delete->kategori);
 
         if ($delete->delete()) {
+            return response()->json([
+                'status' => 'success'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error'
+            ]);
+
+        }
+    }
+
+    public function cooperativeVerifikasi(Request $request)
+    {
+        $verifikasi = Cooperative::findOrFail($request->id);
+        $verifikasi->is_verified = '1';
+
+        if ($verifikasi->save()) {
             return response()->json([
                 'status' => 'success'
             ]);

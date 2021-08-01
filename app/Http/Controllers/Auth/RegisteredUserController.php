@@ -21,7 +21,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        $data['koperasi'] = Cooperative::all();
+        $data['koperasi'] = Cooperative::where('is_verified', '=', '1')->get();
         return view('auth.register', $data);
     }
 
@@ -54,8 +54,10 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        if ($user->save()) {
+            return redirect()
+            ->back()
+            ->with('success', 'Data pengguna berhasil ditambahkan, hubungi admin / dinas untuk verifikasi data.');
+        }
     }
 }
