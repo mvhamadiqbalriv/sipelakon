@@ -80,7 +80,7 @@
                 </div>
                 <div class="tt-col-value tt-color-select hide-mobile">{{$item->comments_count}}</div>
                 <div class="tt-col-value hide-mobile">
-                    @if ($item->creator_id == Auth::user()->id)
+                    @if ($item->creator_id == Auth::user()->id || Auth::user()->jenis_akun == 'admin')
                         <a href="{{route('post.edit', $item->id)}}" class=""><span
                             class="tt-color03 tt-badge" style="margin-bottom: 3px;">Edit</span></a>
                         <a href="javascript:void(0)" onclick="deletePost({{$item->id}})"><span

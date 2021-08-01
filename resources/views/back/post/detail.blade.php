@@ -29,7 +29,9 @@
                             </div>
                             <div class="tt-avatar-title">
                                 <a href="#"><b>{{ $detail->user->name }}</b> </a>
+                                @if ($detail->user->jenis_akun == 'koperasi')
                                 <p><small><i>{{ $detail->user->koperasi->name }}</i></small></p>
+                                @endif
                             </div>
                             <a href="#" class="tt-info-time">
                                 <i class="tt-icon"><svg>

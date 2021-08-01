@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $data['list'] = Post::filterCategory($request->category)->withCount('comments')->orderBy('created_at','desc')->get();
+        $data['list'] = Post::filterCategory($request->category)->withCount('comments')->filterPermission()->orderBy('created_at','desc')->get();
         $data['kategori'] = Category_post::all();
         return view('back.post.index', $data);
     }
@@ -45,14 +45,20 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required|max:255|unique:posts',
+            'judul' => 'required|max:255',
             'konten' => 'required',
             'category_post_id' => 'required',
         ]);
 
+        if (Auth::user()->jenis_akun == 'koperasi') {
+            $slug = Str::random(11);
+        }else{
+            $slug = Str::slug($request->judul);
+        }
+
         $new = Post::create([
             'judul' => $request->judul,
-            'slug' => Str::slug($request->judul),
+            'slug' => $slug,
             'konten' => $request->konten,
             'category_post_id' => $request->category_post_id,
             'tag' => $request->tag, 
@@ -101,15 +107,21 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'judul' => 'required|max:255|unique:posts,judul,'.$id,
+            'judul' => 'required|max:255',
             'konten' => 'required',
             'category_post_id' => 'required',
         ]);
 
         $updated = Post::findOrFail($id);
 
+        if (Auth::user()->jenis_akun == 'koperasi') {
+            $slug = Str::random(11);
+        }else{
+            $slug = Str::slug($request->judul);
+        }
+
         $updated->judul = $request->judul;
-        $updated->slug = Str::slug($request->judul);
+        $updated->slug = $slug;
         $updated->konten = $request->konten;
         $updated->category_post_id = $request->category_post_id;
         $updated->tag = $request->tag; 

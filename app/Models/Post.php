@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
@@ -30,6 +31,17 @@ class Post extends Model
         return $query->when($category, function ($q, $category) {
             return $q->where('category_post_id', $category);
         });
+    }
+
+    public function scopeFilterPermission($query)
+    {
+        if (Auth::user()->jenis_akun == 'koperasi') {
+            return $query->whereHas('user', function ($query) {
+                 $query->where('cooperative_id', '=', Auth::user()->cooperative_id);
+                 $query->orWhere('jenis_akun', '=', 'admin');
+                 return $query->orWhere('jenis_akun', '=', 'dinas');
+            });
+        }
     }
 
     public function getRouteKeyName()

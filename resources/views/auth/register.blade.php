@@ -1,3 +1,6 @@
+@section('title')
+    Daftar User
+@endsection
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
