@@ -82,12 +82,8 @@
             @endforeach
         </div>
         <div class="col-12">
-            <div class="tt-row-btn">
-                <button type="button" class="btn-icon js-topiclist-showmore">
-                    <svg class="tt-icon">
-                      <use xlink:href="#icon-load_lore_icon"></use>
-                    </svg>
-                </button>
+            <div class="mt-5">
+                {{$list->links('pagination::bootstrap-4')}}
             </div>
         </div>
     </div>

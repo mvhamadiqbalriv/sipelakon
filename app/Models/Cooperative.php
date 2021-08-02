@@ -33,4 +33,11 @@ class Cooperative extends Model
         });
     }
 
+    public function scopeFilterName($query, $name)
+    {
+        return $query->when($name, function ($q, $name) {
+            return $q->where('name', 'LIKE', "%$name%");
+        });
+    }
+
 }

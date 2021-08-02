@@ -16,8 +16,9 @@
             <form action="{{route('cooperative.filter-kecamatan')}}" method="POST">
                 @csrf
                 <div class="form-group">
+                    <div class="custom-select-01">
                     <select name="kecamatan" class="form-control" onchange="this.form.submit()" id="">
-                        <option value="kecamatan">--Filter by Kecamatan--</option>
+                        <option value="">--Filter by Kecamatan--</option>
                         @foreach ($kecamatan as $item)
                             @php
                                 $selected = null;
@@ -28,6 +29,7 @@
                             <option value="{{$item->id}}" {{($selected == $item->id) ? 'selected' : null}}>{{$item->name}}</option>
                         @endforeach
                     </select>
+                </div>
                 </div>
             </form>
         </div>
@@ -77,12 +79,8 @@
             </div>
         @endforeach
         <div class="col-12">
-            <div class="tt-row-btn">
-                <button type="button" class="btn-icon js-topiclist-showmore">
-                    <svg class="tt-icon">
-                      <use xlink:href="#icon-load_lore_icon"></use>
-                    </svg>
-                </button>
+            <div class="mt-5">
+                {{$list->links('pagination::bootstrap-4')}}
             </div>
         </div>
     </div>

@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $data['list'] = Post::filterCategory($request->category)->withCount('comments')->filterPermission()->orderBy('created_at','desc')->get();
+        $data['list'] = Post::filterJudul($request->keyword)->filterCategory($request->category)->withCount('comments')->filterPermission()->orderBy('created_at','desc')->paginate(5);
         $data['kategori'] = Category_post::all();
         return view('back.post.index', $data);
     }

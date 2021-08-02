@@ -33,6 +33,13 @@ class Post extends Model
         });
     }
 
+    public function scopeFilterJudul($query, $judul)
+    {
+        return $query->when($judul, function ($q, $judul) {
+            return $q->where('judul', 'LIKE', "%$judul%");
+        });
+    }
+
     public function scopeFilterPermission($query)
     {
         if (Auth::user()->jenis_akun == 'koperasi') {

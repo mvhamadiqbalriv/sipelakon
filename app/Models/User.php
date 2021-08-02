@@ -47,4 +47,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Cooperative::class, 'cooperative_id', 'id');
     }
+
+    public function scopeFilterName($query, $name)
+    {
+        return $query->when($name, function ($q, $name) {
+            return $q->where('name', 'LIKE', "%$name%");
+        });
+    }
 }

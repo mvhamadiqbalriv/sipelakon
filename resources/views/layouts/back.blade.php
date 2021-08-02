@@ -89,9 +89,22 @@
                             </svg>
                         </button>
                         <!-- /toggle -->
-                        <form class="search-wrapper">
+                        @php
+                            $route_search = route('post.filter-category');
+                            $label_search = 'Postingan';
+                            if($url[3] == 'cooperative'){
+                                $route_search = route('cooperative.filter-kecamatan');
+                                $label_search = 'Koperasi';
+                            }elseif($url[3] == 'users'){
+                                $route_search = route('users.filter');
+                                $label_search = 'Pengguna';
+                            }
+                        @endphp
+
+                        <form class="search-wrapper" action="{{$route_search}}" method="POST">
+                            @csrf
                             <div class="search-form">
-                                <input type="text" class="tt-search__input" placeholder="Search">
+                                <input type="text" class="tt-search__input" name="keyword"  value="{{$keyword ?? null}}" placeholder="Masukan kata kunci">
                                 <button class="tt-search__btn" type="submit">
                                     <svg class="tt-icon">
                                         <use xlink:href="#icon-search"></use>
@@ -104,8 +117,7 @@
                                 </button>
                             </div>
                             <div class="search-results">
-                                <button type="button" class="tt-view-all" data-toggle="modal"
-                                    data-target="#modalAdvancedSearch">Advanced Search</button>
+                                <button type="submit" class="tt-view-all" >Cari {{$label_search}} !</button>
                             </div>
                         </form>
                     </div>
@@ -114,9 +126,6 @@
                 @auth
                     <div class="col-auto ml-auto">
                         <div class="tt-user-info d-flex justify-content-center">
-                        <a href="#" class="tt-btn-icon">
-                                <i class="tt-icon"><svg><use xlink:href="#icon-notification"></use></svg></i>
-                        </a>
                         <div class="tt-avatar-icon tt-size-md">
                                 @php
                                     $firstCharacter = strtolower(substr(Auth::user()->name, 0, 1));

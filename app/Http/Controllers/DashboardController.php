@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cooperative;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -15,8 +16,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $data['user_count'] = User::count();
         $data['koperasi_count'] = Cooperative::count();
-        $data['post_count'] = Post::count();
+        $data['post_count'] = Post::filterPermission()->count();
         return view('back.dashboard', $data);
     }
 

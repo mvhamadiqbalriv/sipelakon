@@ -19,8 +19,9 @@ class CooperativeController extends Controller
      */
     public function index(Request $request)
     {
-        $data['list'] = Cooperative::filterKecamatan($request->kecamatan)->orderBy('created_at', 'desc')->get();
+        $data['list'] = Cooperative::filterName($request->keyword)->filterKecamatan($request->kecamatan)->orderBy('created_at', 'desc')->paginate(5);
         $data['kecamatan'] = District::where('regency_id', '=', 3211)->get();
+        $data['keyword'] = $request->keyword ?? null;
         return view('back.cooperative.index', $data);
     }
 

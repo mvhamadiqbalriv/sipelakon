@@ -2,6 +2,24 @@
 @section('title')
     Forum
 @endsection
+@section('css')
+<style>
+    .pagination a {
+      color: black;
+      float: left;
+      padding: 8px 16px;
+      text-decoration: none;
+      transition: background-color .3s;
+    }
+    
+    .pagination a.active {
+      background-color: dodgerblue;
+      color: white;
+    }
+    
+    .pagination a:hover:not(.active) {background-color: #ddd;}
+    </style>
+@endsection
 @section('content')
 <div class="container">
     <br>
@@ -13,6 +31,7 @@
             <a href="{{route('post.create')}}" class="btn btn-primary"> Tambah</a>
         </div>
         <div class="col" style="text-align: right">
+            <div class="custom-select-01">
             <form action="{{route('post.filter-category')}}" method="POST">
                 @csrf
                 <div class="form-group">
@@ -28,6 +47,7 @@
                             <option value="{{$item->id}}" {{($selected == $item->id) ? 'selected' : null}}>{{$item->nama}}</option>
                         @endforeach
                     </select>
+                </div>
                 </div>
             </form>
         </div>
@@ -92,12 +112,8 @@
             </div>
         @endforeach
         <div class="col-12">
-            <div class="tt-row-btn">
-                <button type="button" class="btn-icon js-topiclist-showmore">
-                    <svg class="tt-icon">
-                      <use xlink:href="#icon-load_lore_icon"></use>
-                    </svg>
-                </button>
+            <div class="mt-5">
+                {{$list->links('pagination::bootstrap-4')}}
             </div>
         </div>
     </div>

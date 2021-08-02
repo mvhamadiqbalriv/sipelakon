@@ -17,9 +17,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data['list'] = User::all();
+        $data['list'] = User::filterName($request->keyword)->paginate(5);
         return view('back.user.index', $data);
     }
 
