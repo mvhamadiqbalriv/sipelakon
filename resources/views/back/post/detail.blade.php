@@ -45,26 +45,35 @@
                         <div class="tt-item-tag">
                             <ul class="tt-list-badge">
                                 <li><a href="#">
-                                        @if ($detail->jenis_usaha == 1)
+                                        @if ($detail->kategori->id == 1)
                                             <span class="tt-color01 tt-badge">{{ $detail->kategori->nama }}</span>
-                                        @elseif ($detail->jenis_usaha == 2)
-                                            <span class="tt-color02 tt-badge">{{ $detail->kategori->nama }}</span>
+                                        @elseif ($detail->kategori->id == 2)
+                                            <span class="tt-color09 tt-badge">{{ $detail->kategori->nama }}</span>
                                         @else
-                                            <span class="tt-color03 tt-badge">{{ $detail->kategori->nama }}</span>
+                                            <span class="tt-color05 tt-badge">{{ $detail->kategori->nama }}</span>
                                         @endif
                                     </a></li>
-                                @php
-                                    $tags = explode(',', $detail->tag);
-                                @endphp
-                                @foreach ($tags as $tag)
-                                    <li><a href="#"><span class="tt-badge">{{ $tag }}</span></a></li>
-                                @endforeach
+                                    @if ($detail->tag)
+                                        @php
+                                            $tags = explode(',', $detail->tag);
+                                        @endphp
+                                        @foreach ($tags as $tag)
+                                            <li><a href="#"><span class="tt-badge">{{ $tag }}</span></a></li>
+                                        @endforeach
+                                    @endif
                             </ul>
                         </div>
                     </div>
                     <div class="tt-item-description">
                         {!! $detail->konten !!}
                     </div>
+                    @if ($detail->file)
+                        <hr>
+                        <small>Document</small>
+                        <ul>
+                            <li><small><a href="{{Storage::url($detail->file)}}">{{basename($detail->file)}}</a></small></li>
+                        </ul>
+                    @endif
                 </div>
             </div>
             <p class="text-right">

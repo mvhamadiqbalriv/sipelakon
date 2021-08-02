@@ -14,7 +14,7 @@ class AddFileToPostsTable extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            //
+            $table->string('file')->nullable();
         });
     }
 

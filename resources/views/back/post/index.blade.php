@@ -79,12 +79,14 @@
                     <div class="row align-items-center no-gutters">
                         <div class="col-11">
                             <ul class="tt-list-badge">
-                                @php
-                                    $tags = explode(',',$item->tag);
-                                @endphp
-                                @foreach ($tags as $tag)
-                                    <li><a href="#"><span class="tt-badge">{{$tag}}</span></a></li>
-                                @endforeach
+                                @if ($item->tag)
+                                    @php
+                                        $tags = explode(',',$item->tag);
+                                    @endphp
+                                    @foreach ($tags as $tag)
+                                        <li><a href="#"><span class="tt-badge">{{$tag}}</span></a></li>
+                                    @endforeach
+                                @endif
                             </ul>
                         </div>
                     </div>

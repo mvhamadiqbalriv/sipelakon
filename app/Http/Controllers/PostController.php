@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Models\Comment_post;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -44,16 +45,27 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validation = [
             'judul' => 'required|max:255',
             'konten' => 'required',
             'category_post_id' => 'required',
-        ]);
+        ];
 
         if (Auth::user()->jenis_akun == 'koperasi') {
             $slug = Str::random(11);
         }else{
             $slug = Str::slug($request->judul);
+        }
+
+        $path = null;
+        if ($request->file('file')) {
+            $validation['file'] = 'file|max:3000';
+        }
+        
+        $request->validate($validation);
+        
+        if ($request->file('file')) {
+            $path = Storage::putFile('public/post/file',$request->file('file'));
         }
 
         $new = Post::create([
@@ -62,7 +74,8 @@ class PostController extends Controller
             'konten' => $request->konten,
             'category_post_id' => $request->category_post_id,
             'tag' => $request->tag, 
-            'creator_id' => Auth::user()->id
+            'creator_id' => Auth::user()->id,
+            'file' => $path
         ]);
 
         if ($new->save()) {
@@ -106,13 +119,25 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validation = [
             'judul' => 'required|max:255',
             'konten' => 'required',
             'category_post_id' => 'required',
-        ]);
+        ];
 
+        if ($request->file('file')) {
+            $validation['file'] = 'file|max:3000';
+        }
+        
+        $request->validate($validation);
+        
         $updated = Post::findOrFail($id);
+
+        if ($request->file('file')) {
+            $path = Storage::putFile('public/post/file',$request->file('file'));
+            Storage::delete($updated->file);
+            $updated->file = $path;
+        }
 
         if (Auth::user()->jenis_akun == 'koperasi') {
             $slug = Str::random(11);
@@ -188,6 +213,9 @@ class PostController extends Controller
     public function postDelete(Request $request)
     {
         $delete = Post::findOrFail($request->id);
+        if ($delete->file) {
+            Storage::delete($delete->file);
+        }
 
         if ($delete->delete()) {
             return response()->json([
