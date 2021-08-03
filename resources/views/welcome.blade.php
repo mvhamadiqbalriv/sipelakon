@@ -49,7 +49,7 @@
                     Sistem Pelaporan dan Konsultasi (SIPELAKON)
                 </h1>
                 <p class="leading-normal text-2xl mb-8">
-                    Dinas Koperasi dan UMKM Kabupaten. Sumedang
+                    Dinas Koperasi dan UMKM Kabupaten Sumedang
                 </p>
                 @if (Route::has('login'))
                     @auth
