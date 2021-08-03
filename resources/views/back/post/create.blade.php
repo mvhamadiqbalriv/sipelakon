@@ -1,20 +1,20 @@
 @extends('layouts.back')
 @section('title')
-    Create New Topic
+    Tambah Postingan Baru
 @endsection
 @section('content')
 <br>
 <div class="container">
     <div class="tt-wrapper-inner">
         <h1 class="tt-title-border">
-            Create New Topic
+            Tambah Postingan Baru
         </h1>
         <form class="form-default form-create-topic" method="POST" action="{{route('post.post-store')}}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="judul">Judul <sup style="color:red">*</sup></label>
                 <div class="tt-value-wrapper">
-                    <input type="text" name="judul" value="{{old('judul')}}" class="form-control is-invalid" id="judul" placeholder="Subject of your topic">
+                    <input type="text" name="judul" value="{{old('judul')}}" class="form-control is-invalid" id="judul" placeholder="Judul dari Postingan">
                 </div>
                 @error('judul')
                     <div class="tt-note" style="color:red">
@@ -52,7 +52,7 @@
                     <div class="col-5">
                         <div class="form-group">
                             <label for="inputTopicTags">Tags</label>
-                            <input type="text" name="tag" class="form-control" id="inputTopicTags" placeholder="Use comma to separate tags">
+                            <input type="text" name="tag" class="form-control" id="inputTopicTags" placeholder="Gunakan koma untuk memisahkan tag">
                             @error('tag')
                                 <div class="tt-note" style="color:red">
                                     {{$message}}
@@ -75,7 +75,7 @@
                 <small class="italic">NB: Inputan dengan tanda (<sup title="Wajib diisi" style="color:red">*</sup>) Wajib diisi.</small>
                  <div class="row">
                     <div class="col-auto ml-md-auto">
-                        <button type="submit" class="btn btn-secondary btn-width-lg">Create Post</button>
+                        <button type="submit" class="btn btn-secondary btn-width-lg">Tambah Postingan</button>
                     </div>
                 </div>
             </div>

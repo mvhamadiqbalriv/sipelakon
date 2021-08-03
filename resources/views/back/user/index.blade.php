@@ -9,7 +9,7 @@
         Pengguna
     </h1>
     <div class="container row mt-4">
-        @if (Auth::user()->jenis_akun == 'admin')
+        @if (Auth::user()->jenis_akun == 'admin' || Auth::user()->jenis_akun == 'dinas')
         <div class="col">
             <a href="{{route('users.create')}}" class="btn btn-primary"> Tambah</a>
         </div>

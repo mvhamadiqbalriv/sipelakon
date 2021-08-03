@@ -61,6 +61,7 @@ class CooperativeController extends Controller
             'district_id' => $request->district_id,
             'alamat' => $request->alamat,
             'slug' => Str::slug($request->name),
+            'is_verified' => '1'
         ]);
 
         $new->kategori()->attach($request->category);

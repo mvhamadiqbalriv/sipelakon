@@ -1,13 +1,13 @@
 @extends('layouts.back')
 @section('title')
-    Create User
+    Tambah Pengguna
 @endsection
 @section('content')
 <br>
 <div class="container">
     <div class="tt-wrapper-inner">
         <h1 class="tt-title-border">
-            Create User
+            Tambah Pengguna
         </h1>
         <form class="form-default form-create-topic" method="POST" action="{{route('users.store')}}">
             @csrf
@@ -129,7 +129,7 @@
                 </div>
                  <div class="row">
                     <div class="col-auto ml-md-auto" style="text-align: right">
-                        <button type="submit" class="btn btn-secondary btn-width-lg">Create User</button>
+                        <button type="submit" class="btn btn-secondary btn-width-lg">Tambah Pengguna</button>
                     </div>
                 </div>
             </div>

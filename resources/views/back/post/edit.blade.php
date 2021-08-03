@@ -1,13 +1,13 @@
 @extends('layouts.back')
 @section('title')
-    Update Topic
+    Perbaharui Postingan
 @endsection
 @section('content')
 <br>
 <div class="container">
     <div class="tt-wrapper-inner">
         <h1 class="tt-title-border">
-            Update Topic
+            Perbaharui Postingan
         </h1>
         <form class="form-default form-create-topic" method="POST" action="{{route('post.update', $detail->id)}}">
             @csrf
@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label for="judul">Judul</label>
                 <div class="tt-value-wrapper">
-                    <input type="text" name="judul" value="{{$detail->judul ?? old('judul')}}" class="form-control is-invalid" id="judul" placeholder="Subject of your topic">
+                    <input type="text" name="judul" value="{{$detail->judul ?? old('judul')}}" class="form-control is-invalid" id="judul" placeholder="Judul dari Postingan">
                 </div>
                 @error('judul')
                     <div class="tt-note" style="color:red">
@@ -59,7 +59,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label for="inputTopicTags">Tags</label>
-                            <input type="text" name="tag" value="{{$detail->tag ?? old('tag')}}" class="form-control" id="inputTopicTags" placeholder="Use comma to separate tags">
+                            <input type="text" name="tag" value="{{$detail->tag ?? old('tag')}}" class="form-control" id="inputTopicTags" placeholder="Gunakan koma untuk memisahkan tag">
                             @error('tag')
                                 <div class="tt-note" style="color:red">
                                     {{$message}}
@@ -70,7 +70,7 @@
                 </div>
                  <div class="row">
                     <div class="col-auto ml-md-auto">
-                        <button type="submit" class="btn btn-secondary btn-width-lg">Update Post</button>
+                        <button type="submit" class="btn btn-secondary btn-width-lg">Perbaharui Postingan</button>
                     </div>
                 </div>
             </div>

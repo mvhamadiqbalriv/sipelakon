@@ -1,5 +1,5 @@
 @section('title')
-    Login Sipelakon
+    Login
 @endsection
 <x-guest-layout>
     <x-auth-card>

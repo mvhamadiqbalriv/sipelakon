@@ -63,6 +63,7 @@ class UserController extends Controller
             'cooperative_id' => $request->cooperative_id,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_verified' => '1'
         ]);
 
         if ($new->save()) {

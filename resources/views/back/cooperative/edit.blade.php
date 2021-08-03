@@ -1,13 +1,13 @@
 @extends('layouts.back')
 @section('title')
-    Update Koperasi {{$detail->name}} 
+    Perbaharui Koperasi {{$detail->name}} 
 @endsection
 @section('content')
     <br>
     <div class="container">
         <div class="tt-wrapper-inner">
             <h1 class="tt-title-border">
-                Update Koperasi {{$detail->name}}
+                Perbaharui Koperasi {{$detail->name}}
             </h1>
             <form action="{{route('cooperative.update', $detail->id)}}" method="POST" class="form-default form-create-topic">
                 @csrf
@@ -98,7 +98,7 @@
                     </div>
                     <div class="row">
                         <div class="col-auto ml-md-auto">
-                            <button type="submit" class="btn btn-secondary btn-width-lg">Update Koperasi</button>
+                            <button type="submit" class="btn btn-secondary btn-width-lg">Perbaharui Koperasi</button>
                         </div>
                     </div>
                 </div>

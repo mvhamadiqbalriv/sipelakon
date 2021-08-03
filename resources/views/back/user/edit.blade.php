@@ -1,13 +1,13 @@
 @extends('layouts.back')
 @section('title')
-    Update User
+    Perbaharui Pengguna
 @endsection
 @section('content')
 <br>
 <div class="container">
     <div class="tt-wrapper-inner">
         <h1 class="tt-title-border">
-            Update User
+            Perbaharui Pengguna
         </h1>
         <form class="form-default form-create-topic" method="POST" action="{{route('users.update', $detail->id)}}">
             @csrf
@@ -108,7 +108,7 @@
                           </button>
                      </div>
                     <div class="col-auto ml-md-auto" style="text-align: right">
-                        <button type="submit" class="btn btn-secondary btn-width-lg">Update User</button>
+                        <button type="submit" class="btn btn-secondary btn-width-lg">Perbaharui Pengguna</button>
                     </div>
                 </div>
             </div>
