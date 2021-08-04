@@ -46,7 +46,7 @@
             <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
                 <p class="uppercase tracking-loose w-full">Selamat Datang di Official Website Aplikasi</p>
                 <h1 class="my-4 text-5xl font-bold leading-tight">
-                    Sistem Pelaporan dan Konsultasi
+                    Sistem Pelayanan dan Konsultasi Online
                 </h1>
                 <p class="leading-normal text-2xl mb-8">
                     Dinas Koperasi dan UMKM Kabupaten Sumedang
