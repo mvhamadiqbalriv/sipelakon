@@ -54,4 +54,23 @@ class User extends Authenticatable
             return $q->where('name', 'LIKE', "%$name%");
         });
     }
+
+    public function postingan()
+    {
+        return $this->hasMany(Post::class, 'creator_id');
+    }
+
+    protected static $relations_to_cascade = ['postingan'];
+
+    public static function boot ()
+    {
+        parent::boot();
+        static::deleting(function($resource) {
+            foreach (static::$relations_to_cascade as $relation) {
+                foreach ($resource->{$relation}()->get() as $item) {
+                    $item->delete();
+                }
+            }
+        });
+    }
 }
