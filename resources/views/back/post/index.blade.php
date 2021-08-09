@@ -96,10 +96,10 @@
                         <span class="tt-color01 tt-badge">{{$item->kategori->nama}}</span>
                     @elseif ($item->category_post_id == 2)
                         <span class="tt-color09 tt-badge">{{$item->kategori->nama}}</span>
-                        @elseif ($detail->kategori->id == 3)
-                        <span class="tt-color05 tt-badge">{{ $detail->kategori->nama }}</span>
+                        @elseif ($item->kategori->id == 3)
+                        <span class="tt-color05 tt-badge">{{ $item->kategori->nama }}</span>
                     @else
-                        <span class="tt-color07 tt-badge">{{ $detail->kategori->nama }}</span>
+                        <span class="tt-color07 tt-badge">{{ $item->kategori->nama }}</span>
                     @endif
                 </div>
                 <div class="tt-col-value tt-color-select hide-mobile">{{$item->comments_count}}</div>
