@@ -49,8 +49,10 @@
                                             <span class="tt-color01 tt-badge">{{ $detail->kategori->nama }}</span>
                                         @elseif ($detail->kategori->id == 2)
                                             <span class="tt-color09 tt-badge">{{ $detail->kategori->nama }}</span>
-                                        @else
+                                        @elseif ($detail->kategori->id == 3)
                                             <span class="tt-color05 tt-badge">{{ $detail->kategori->nama }}</span>
+                                        @else
+                                            <span class="tt-color07 tt-badge">{{ $detail->kategori->nama }}</span>
                                         @endif
                                     </a></li>
                                     @if ($detail->tag)
@@ -71,7 +73,7 @@
                         <hr>
                         <small>Document</small>
                         <ul>
-                            <li><small><a href="{{Storage::url($detail->file)}}">{{basename($detail->file)}}</a></small></li>
+                            <li><small><a href="{{Storage::url($detail->file)}}">Download</a></small></li>
                         </ul>
                     @endif
                 </div>
@@ -126,6 +128,15 @@
                         <div class="tt-item-description">
                             {!! $item->konten !!}
                         </div>
+                        <div id="lampiranKomen{{$item->id}}">
+                                @if ($item->file)
+                                <hr>
+                                <small>Lampiran</small>
+                                <ul>
+                                    <li><small><a href="{{Storage::url($item->file)}}">Download</a></small></li>
+                                </ul>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -176,23 +187,23 @@
             e.preventDefault();
 
             const konten = CKEDITOR.instances.konten.getData();
+            const file = replyAdd.file.files[0];
             const post_id = "{{ $detail->id }}";
             const creator_id = "{{ Auth::user()->id }}";
             const _token = "{{ csrf_token() }}";
 
+            let formData = new FormData();
+             formData.append("konten", konten);
+             formData.append("file", file);
+             formData.append("post_id", post_id);
+             formData.append("creator_id", creator_id);
+
             try {
                 let response = await fetch("{{ route('post.comment-store') }}", {
                     method: "POST",
-                    body: JSON.stringify({
-                        konten: konten,
-                        post_id: post_id,
-                        creator_id: creator_id
-                    }),
+                    body: formData,
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
                         "X-CSRF-TOKEN": _token,
-                        "X-Requested-With": "XMLHttpRequest"
                     }
                 });
                 var datasend = await response.json();
@@ -219,10 +230,17 @@
                         '<span class="tt-icon" onclick="deleteComment(' +
                         datasend.data.id +
                         ')"> <svg> <use xlink:href="#icon-cancel">Hapus</use> </svg>       </span></a> </div> </div> <div class="tt-item-description">' +
-                        datasend.data.konten +
-                        '</div></div></div>';
+                        datasend.data.konten + '</div><div id="lampiranKomen'+datasend.data.id+'"></div></div></div>';
+                    
                     $('#konten').empty();
                     $('#single-topik').append(row);
+                    
+                    if (datasend.data.file != null) {
+                        var url = window.location.origin;
+                        var lampiran = '<hr> <small>Lampiran</small>  <ul> <li><small><a href="'+url+'/'+datasend.data.file.replace('public/','storage/')+'" download>Download</a></small></li> </ul>';
+                        $('#lampiranKomen'+datasend.data.id).append(lampiran);
+                    }
+
                 }
 
                 return false;

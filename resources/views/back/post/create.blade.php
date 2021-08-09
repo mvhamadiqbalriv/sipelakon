@@ -39,6 +39,11 @@
                             <select name="category_post_id" class="form-control">
                                 <option value="">-- Select --</option>
                                 @foreach ($kategori as $item)
+                                    @php
+                                        if($item->nama == 'Informasi' && Auth::user()->jenis_akun == 'koperasi'){
+                                            continue;
+                                        }
+                                    @endphp
                                     <option value="{{$item->id}}">{{$item->nama}}</option>
                                 @endforeach
                             </select>

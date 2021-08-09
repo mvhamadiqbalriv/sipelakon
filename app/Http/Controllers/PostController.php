@@ -171,12 +171,22 @@ class PostController extends Controller
 
     public function commentStore(Request $request)
     {
-        $request->validate([
-            'konten' => 'required'
-        ]);
+        $validation = ['konten' => 'required'];
+
+        $path = null;
+        if ($request->file('file')) {
+            $validation['file'] = 'file|max:3000';
+        }
+
+        $request->validate($validation);
+
+        if ($request->file('file')) {
+            $path = Storage::putFile('public/comment/file',$request->file('file'));
+        }
 
         $new = Comment_post::create([
             'konten' => $request->konten,
+            'file' => $path,
             'post_id' => $request->post_id,
             'creator_id' => $request->creator_id,
         ]);
@@ -197,6 +207,9 @@ class PostController extends Controller
     public function commentDelete(Request $request)
     {
         $delete = Comment_post::findOrFail($request->id);
+        if ($delete->file) {
+            Storage::delete($delete->file);
+        }
 
         if ($delete->delete()) {
             return response()->json([
