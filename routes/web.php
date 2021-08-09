@@ -52,8 +52,8 @@ Route::group(['middleware' => 'auth'], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
     });
     
-    Route::post('copperative', [CooperativeController::class, 'index'])->name('copperative.filter');
-    Route::post('users', [UserController::class, 'index'])->name('users.filter');
+    Route::post('copperative-filter', [CooperativeController::class, 'index'])->name('copperative.filter');
+    Route::post('users-filter', [UserController::class, 'index'])->name('users.filter');
 
     Route::post('post', [PostController::class, 'index'])->name('post.filter-category');
     Route::post('post-store', [PostController::class, 'store'])->name('post.post-store');
