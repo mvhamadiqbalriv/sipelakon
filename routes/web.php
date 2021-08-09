@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth'], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
     });
     
-    Route::post('copperative', [CopperativeController::class, 'index'])->name('copperative.filter');
+    Route::post('copperative', [CooperativeController::class, 'index'])->name('copperative.filter');
     Route::post('users', [UserController::class, 'index'])->name('users.filter');
 
     Route::post('post', [PostController::class, 'index'])->name('post.filter-category');
@@ -66,8 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('users', UserController::class);
         Route::post('users-delete', [UserController::class, 'userDelete'])->name('users.user-delete');
         Route::post('users-verifikasi', [UserController::class, 'userVerifikasi'])->name('users.user-verifikasi');
-        Route::post('users', [UserController::class, 'index'])->name('users.filter');
-
+        
         //Koperasi
         Route::resource('cooperative', CooperativeController::class);
         Route::post('cooperative', [CooperativeController::class, 'index'])->name('cooperative.filter-kecamatan');
