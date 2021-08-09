@@ -133,10 +133,14 @@
         <div class="tt-wrapper-inner">
             <div class="pt-editor form-default">
                 <h6 class="pt-title">Post Your Reply</h6>
-                <form id="replyAdd">
+                <form id="replyAdd" enctype="multipart/form-data">
                     <div class="form-group">
                         <textarea name="konten" id="konten" class="form-control" rows="5"
                             placeholder="Lets get started"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Sematkan file</label>
+                        <input type="file" class="form-control" name="file">
                     </div>
                     <div class="pt-row">
                         <div class="col-auto">
