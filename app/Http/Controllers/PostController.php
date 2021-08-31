@@ -59,7 +59,7 @@ class PostController extends Controller
 
         $path = null;
         if ($request->file('file')) {
-            $validation['file'] = 'file|max:3000';
+            $validation['file'] = 'file|max:10000';
         }
         
         $request->validate($validation);
@@ -126,7 +126,7 @@ class PostController extends Controller
         ];
 
         if ($request->file('file')) {
-            $validation['file'] = 'file|max:3000';
+            $validation['file'] = 'file|max:10000';
         }
         
         $request->validate($validation);
@@ -175,7 +175,7 @@ class PostController extends Controller
 
         $path = null;
         if ($request->file('file')) {
-            $validation['file'] = 'file|max:3000';
+            $validation['file'] = 'file|max:10000';
         }
 
         $request->validate($validation);
