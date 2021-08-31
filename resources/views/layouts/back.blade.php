@@ -135,7 +135,7 @@
                         <div class="custom-select-01">
                             <select name="forma" onchange="location = this.value;">
                                 <option value="#">{{Auth::user()->name}}</option>
-                                <option value="setting">Setting</option>
+                                <option value="{{url('setting')}}">Setting</option>
                                
                             </select>
                         </div>
